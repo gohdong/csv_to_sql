@@ -4,7 +4,7 @@ import csv
 log_list = []
 file_list = ['210725.csv','210802.csv','210808.csv','210815.csv','test.csv']
 for file in file_list:
-    with open(file, newline='') as csvfile:
+    with open('data/'+file, newline='') as csvfile:
         readCSV = csv.reader(csvfile)
         for row in readCSV:
             log_list.append({

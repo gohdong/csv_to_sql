@@ -1,9 +1,16 @@
 import csv
+import datetime
 
 # "Host","Log Name","Date Time","Time Zone","Method","URL","Response Code","Bytes Sent","Referer","User Agent"
+
+#로그들 들어갈 자리
 log_list = []
+
+#data폴더에 있는 애들 중 처리할 아이들
 file_list = ['210725.csv','210802.csv','210808.csv','210815.csv','test.csv']
 
+
+#URL 딕셔너리로 하면 안에 있는지 확인 O(1)에 가능해서 리스트보다 성능에 좋음
 url_dict = {
     '/api/haccp/pollingTest' : '폴링테스트',
     '/haccp/monitor' : 'HACCP모니터링',
@@ -96,9 +103,10 @@ for file in file_list:
     with open('data/'+file, newline='') as csvfile:
         readCSV = csv.reader(csvfile)
         for row in readCSV:
+            #여기 조건 수정하세용
             if 'doraji' in row[8] and row[5] in url_dict:
                 
-                # url_dict[row[5]] = 'a'
+
                 log_list.append({
                     "host" : row[0],
                     "dateTime" : row[2],
@@ -111,13 +119,21 @@ for file in file_list:
                 })
 
 
-# print(url_dict.keys())
 
-    # print(key)
-
-# print(len(log_list))
 def writeSQL():
-    f = open('output.sql','a')
+    f = open(str(datetime.datetime.now())+'.sql','a')
+    f.write(
+        """-- CREATE TABLE AccessLog (
+-- 	logAt DATETIME,
+-- 	url VARCHAR(2083),
+-- 	responseCode INT,
+--     referer VARCHAR(2083),
+--     method VARCHAR(10),
+--     purpose VARCHAR(32),
+--     byteSent INT,
+-- 	host VARCHAR(20) 
+-- );\n\n"""
+    )
     for log in log_list:
         _logAt = log['dateTime']
         _host = log['host']
@@ -129,7 +145,7 @@ def writeSQL():
         _method = log['method']
         query = f'INSERT INTO AccessLog (logAt,host,referer,url,responseCode,byteSent,purpose,method) VALUES (\'{_logAt}\',\'{_host}\',\'{_referer}\',\'{_url}\',{_reponseCode},{_byteSent},\'{_purpose}\',\'{_method}\');\n'
         f.write(query)
-# print(log_list)
+
 
 def makeKeyList():
     f = open('keys','a')

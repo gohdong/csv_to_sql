@@ -143,7 +143,7 @@ def writeSQL():
         _purpose = log['purpose']
         _reponseCode = log['responseCode']
         _method = log['method']
-        query = f'INSERT INTO AccessLog (logAt,host,referer,url,responseCode,byteSent,purpose,method) VALUES (\'{_logAt}\',\'{_host}\',\'{_referer}\',\'{_url}\',{_reponseCode},{_byteSent},\'{_purpose}\',\'{_method}\');\n'
+        query = f'INSERT INTO doraji_log (log_date,gubun,user,IP,data_size) VALUES (\'{_logAt}\',\'{_purpose}\',\'-\',\'{_host}\',{_byteSent});\n'
         f.write(query)
 
 

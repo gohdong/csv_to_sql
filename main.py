@@ -151,7 +151,7 @@ def writeSQL():
         f.write(query)
 
 
-def makeKeyList():
+def makeKeyJSON():
     f = open(str(datetime.datetime.now())+'_key.json','a')
     f.write('{\n')
     for key in url_dict.keys():
@@ -160,7 +160,7 @@ def makeKeyList():
     f.write('}\n')
 
 # key file 생성
-makeKeyList()
+makeKeyJSON()
 
 # sql 쿼리문 생성
 # writeSQL()

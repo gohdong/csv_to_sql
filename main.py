@@ -4,12 +4,24 @@ import json
 import sys
 
 # file_path = sys.argv[1]
-
-if len(sys.argv) != 2 or sys.argv[1] != "sql" or sys.argv[2] != "json":
-    print("run as > python3 main.py sql || > python3 main.py json")
+if len(sys.argv) < 2:
+    print("run as > python3 main.py -sql || > python3 main.py -json input.json")
     sys.exit()
 
+elif sys.argv[1]!= "-json" and sys.argv[1] != "-sql":
+    print("No such parameter")
+    print("run as > python3 main.py -sql || > python3 main.py -json input.json")
+
+elif (sys.argv[1] == "-sql" and len(sys.argv) < 3):
+    print("There is no input file.")
+    print("try > python3 main.py -sql input.json")
+    sys.exit()
+
+    
 order = sys.argv[1]
+    
+
+
 
 
 
@@ -32,8 +44,9 @@ url_filtering_dict = {}
 url_dict = {}
 
 #json 파일 수정해햐암
-with open('test.json') as json_file:
-    url_dict = json.loads(json_file.read())
+if order == "-sql":
+    with open(sys.argv[2]) as json_file:
+        url_dict = json.loads(json_file.read())
     
 def writeSQL():
     f = open(str(datetime.datetime.now())+'.sql','a')
@@ -75,7 +88,7 @@ def makeKeyJSON():
 for file in file_list:
     with open('data/'+file, newline='') as csvfile:
         readCSV = csv.reader(csvfile)
-        if order == "sql":
+        if order == "-sql":
             for row in readCSV:
 
                 if 'doraji' in row[8] and row[5] in url_dict:
@@ -90,21 +103,21 @@ for file in file_list:
                         'purpose' : url_dict[row[5]] 
                     })
 
-        elif order =="json":
+        elif order =="-json":
             for row in readCSV:
             #여기 조건 수정하세용
                 if 'doraji' in row[8] and row[5]!='/' and '*' not in row[5] and '.css' not in row[5] and '.ico' not in row[5] and '.js' not in row[5] and '.png' not in row[5]:
                     url_filtering_dict[row[5]] = "-"
                     # print(row[5])
 
-if order == "json":
+# key file 생성
+if order == "-json":
     makeKeyJSON()
 
-elif order == "sql":
+# sql 쿼리문 생성
+elif order == "-sql":
     writeSQL()
 
 
-# key file 생성
-# 
 
-# sql 쿼리문 생성
+# 
